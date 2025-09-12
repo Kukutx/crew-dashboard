@@ -13,5 +13,33 @@ export const layout = () => {
     menu: {
       locale: false,
     },
+    route: {
+      routes: [
+        {
+          path: '/',
+          redirect: '/home',
+        },
+        {
+          path: '/home',
+          name: 'Home',
+        },
+        {
+          path: '/crew',
+          name: 'Crew',
+        },
+        {
+          path: '/vessel',
+          name: 'Vessel',
+        },
+        {
+          path: '/schedule',
+          name: 'Schedule',
+        },
+        {
+          path: '/reports',
+          name: 'Reports',
+        },
+      ],
+    },
   };
 };
