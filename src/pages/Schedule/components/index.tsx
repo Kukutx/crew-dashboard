@@ -1,5 +1,5 @@
 const SchedulePlaceholder: React.FC = () => {
-  return <div />;
+  return <div>Schedule module placeholder</div>;
 };
 
 export default SchedulePlaceholder;

@@ -1,5 +1,5 @@
 const VesselPlaceholder: React.FC = () => {
-  return <div />;
+  return <div>Vessel module placeholder</div>;
 };
 
 export default VesselPlaceholder;

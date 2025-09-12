@@ -1,5 +1,5 @@
 const ReportsPlaceholder: React.FC = () => {
-  return <div />;
+  return <div>Reports module placeholder</div>;
 };
 
 export default ReportsPlaceholder;

@@ -1,5 +1,5 @@
 const CrewPlaceholder: React.FC = () => {
-  return <div />;
+  return <div>Crew module placeholder</div>;
 };
 
 export default CrewPlaceholder;
