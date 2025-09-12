@@ -18,6 +18,7 @@ export default defineConfig({
     { name: 'Vessel', path: '/vessel', component: './Vessel' },
     { name: 'Schedule', path: '/schedule', component: './Schedule' },
     { name: 'Reports', path: '/reports', component: './Reports' },
+    { name: 'Events', path: '/events', component: './Events' },
   ],
   npmClient: 'pnpm',
 });

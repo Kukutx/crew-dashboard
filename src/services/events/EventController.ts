@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/constants';
 import { request } from '@umijs/max';
 
 export interface EventItem {
@@ -7,9 +8,12 @@ export interface EventItem {
   description?: string;
 }
 
+/** Base endpoint for events in Crew API */
+const EVENTS_URL = `${API_BASE_URL}/api/Events`;
+
 /** Get list of events */
 export async function getEvents(options?: { [key: string]: any }) {
-  return request<EventItem[]>('/api/events', {
+  return request<EventItem[]>(EVENTS_URL, {
     method: 'GET',
     ...(options || {}),
   });
@@ -21,7 +25,7 @@ export async function getEvent(
   options?: { [key: string]: any },
 ) {
   const { id } = params;
-  return request<EventItem>(`/api/events/${id}`, {
+  return request<EventItem>(`${EVENTS_URL}/${id}`, {
     method: 'GET',
     ...(options || {}),
   });
@@ -32,7 +36,7 @@ export async function createEvent(
   body: EventItem,
   options?: { [key: string]: any },
 ) {
-  return request<EventItem>('/api/events', {
+  return request<EventItem>(EVENTS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     data: body,
@@ -47,7 +51,7 @@ export async function updateEvent(
   options?: { [key: string]: any },
 ) {
   const { id } = params;
-  return request<EventItem>(`/api/events/${id}`, {
+  return request<EventItem>(`${EVENTS_URL}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     data: body,
@@ -61,7 +65,7 @@ export async function deleteEvent(
   options?: { [key: string]: any },
 ) {
   const { id } = params;
-  return request<Record<string, any>>(`/api/events/${id}`, {
+  return request<Record<string, any>>(`${EVENTS_URL}/${id}`, {
     method: 'DELETE',
     ...(options || {}),
   });
