@@ -11,8 +11,8 @@ const Footer: React.FC = () => {
       copyright="Powered by Ant Desgin"
       links={[
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
+          key: 'Crew Dashboard',
+          title: 'Crew Dashboard',
           href: 'https://pro.ant.design',
           blankTarget: true,
         },
