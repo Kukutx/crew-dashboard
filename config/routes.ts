@@ -160,6 +160,40 @@ export default [
     ],
   },
   {
+    path: '/activity',
+    icon: 'calendar',
+    name: 'activity',
+    routes: [
+      {
+        path: '/activity',
+        redirect: '/activity/list',
+      },
+      {
+        name: 'list',
+        icon: 'smile',
+        path: '/activity/list',
+        component: './activity/list',
+      },
+    ],
+  },
+  {
+    path: '/users',
+    icon: 'team',
+    name: 'users',
+    routes: [
+      {
+        path: '/users',
+        redirect: '/users/management',
+      },
+      {
+        name: 'management',
+        icon: 'smile',
+        path: '/users/management',
+        component: './users/management',
+      },
+    ],
+  },
+  {
     path: '/profile',
     name: 'profile',
     icon: 'profile',
