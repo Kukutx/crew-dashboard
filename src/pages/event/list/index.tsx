@@ -391,11 +391,11 @@ const EventList: React.FC = () => {
       if (response?.success === false) {
         throw new Error('create event failed');
       }
-      messageApi.success('新建 Event 成功');
+      messageApi.success('新建活动成功');
       actionRef.current?.reload();
       return true;
     } catch (_error) {
-      messageApi.error('新建 Event 失败，请稍后重试');
+      messageApi.error('新建活动失败，请稍后重试');
       return false;
     }
   };
@@ -409,11 +409,11 @@ const EventList: React.FC = () => {
       if (response?.success === false) {
         throw new Error('update event failed');
       }
-      messageApi.success('更新 Event 成功');
+      messageApi.success('更新活动成功');
       actionRef.current?.reload();
       return true;
     } catch (_error) {
-      messageApi.error('更新 Event 失败，请稍后重试');
+      messageApi.error('更新活动失败，请稍后重试');
       return false;
     }
   };
@@ -442,38 +442,38 @@ const EventList: React.FC = () => {
     <>
       <ProFormText
         name="title"
-        label="Event 名称"
+        label="活动名称"
         width="md"
-        placeholder="请输入 Event 名称"
-        rules={[{ required: true, message: '请输入 Event 名称' }]}
+        placeholder="请输入 活动名称"
+        rules={[{ required: true, message: '请输入 活动名称' }]}
       />
       <ProFormSelect
         name="type"
-        label="Event 类型"
+        label="活动类型"
         width="md"
         options={eventTypeOptions}
-        rules={[{ required: true, message: '请选择 Event 类型' }]}
+        rules={[{ required: true, message: '请选择 活动类型' }]}
       />
       <ProFormSelect
         name="status"
-        label="Event 状态"
+        label="活动状态"
         width="md"
         options={eventStatusOptions}
-        rules={[{ required: true, message: '请选择 Event 状态' }]}
+        rules={[{ required: true, message: '请选择 活动状态' }]}
       />
       <ProFormText
         name="organizer"
         label="主办方"
         width="md"
-        placeholder="请输入 Event 主办方"
-        rules={[{ required: true, message: '请输入 Event 主办方' }]}
+        placeholder="请输入 活动主办方"
+        rules={[{ required: true, message: '请输入 活动主办方' }]}
       />
       <ProFormText
         name="location"
-        label="Event 地点"
+        label="活动地点"
         width="md"
-        placeholder="请输入 Event 地点"
-        rules={[{ required: true, message: '请输入 Event 地点' }]}
+        placeholder="请输入 活动地点"
+        rules={[{ required: true, message: '请输入 活动地点' }]}
       />
       <ProFormDigit
         name="participants"
@@ -484,14 +484,14 @@ const EventList: React.FC = () => {
       />
       <ProFormDateTimeRangePicker
         name="dateRange"
-        label="Event 时间"
+        label="活动时间"
         width="lg"
-        rules={[{ required: true, message: '请选择 Event 时间' }]}
+        rules={[{ required: true, message: '请选择 活动时间' }]}
       />
       <ProFormTextArea
         name="description"
-        label="Event 简介"
-        placeholder="请输入 Event 亮点、嘉宾或宣传要点"
+        label="活动简介"
+        placeholder="请输入 活动亮点、嘉宾或宣传要点"
         fieldProps={{ rows: 4 }}
       />
     </>
@@ -504,7 +504,7 @@ const EventList: React.FC = () => {
       hideInTable: true,
     },
     {
-      title: 'Event 名称',
+      title: '活动名称',
       dataIndex: 'title',
       ellipsis: true,
       render: (dom, entity) => (
@@ -556,7 +556,7 @@ const EventList: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: 'Event 时间',
+      title: '活动时间',
       dataIndex: 'dateRange',
       valueType: 'dateTimeRange',
       hideInTable: true,
@@ -599,7 +599,7 @@ const EventList: React.FC = () => {
             编辑
           </a>
           <Popconfirm
-            title="确认删除该 Event 吗？"
+            title="确认删除该活动吗？"
             onConfirm={() => handleRemove([record.id])}
           >
             <a>删除</a>
@@ -611,16 +611,16 @@ const EventList: React.FC = () => {
 
   const descriptionColumns: ProDescriptionsItemProps<EventItem>[] = [
     {
-      title: 'Event 名称',
+      title: '活动名称',
       dataIndex: 'title',
     },
     {
-      title: 'Event 类型',
+      title: '活动类型',
       dataIndex: 'type',
       valueEnum: eventTypeEnum,
     },
     {
-      title: 'Event 状态',
+      title: '活动状态',
       dataIndex: 'status',
       valueEnum: eventStatusEnum,
     },
@@ -629,7 +629,7 @@ const EventList: React.FC = () => {
       dataIndex: 'organizer',
     },
     {
-      title: 'Event 地点',
+      title: '活动地点',
       dataIndex: 'location',
     },
     {
@@ -647,7 +647,7 @@ const EventList: React.FC = () => {
       valueType: 'dateTime',
     },
     {
-      title: 'Event 简介',
+      title: '活动简介',
       dataIndex: 'description',
       valueType: 'textarea',
     },
@@ -677,7 +677,7 @@ const EventList: React.FC = () => {
     <PageContainer>
       {contextHolder}
       <ProTable<EventItem, EventTableParams>
-        headerTitle="Event 列表"
+        headerTitle="活动列表"
         actionRef={actionRef}
         rowKey="id"
         search={{
@@ -748,7 +748,7 @@ const EventList: React.FC = () => {
       )}
 
       <ModalForm<EventFormValues>
-        title="新建 Event"
+        title="新建活动"
         width={520}
         modalProps={{
           destroyOnClose: true,
@@ -773,7 +773,7 @@ const EventList: React.FC = () => {
 
       <ModalForm<EventFormValues>
         key={currentRow?.id || 'update'}
-        title="编辑 Event"
+        title="编辑活动"
         width={520}
         modalProps={{
           destroyOnClose: true,
@@ -815,7 +815,7 @@ const EventList: React.FC = () => {
         closable
         destroyOnClose
         title={
-          currentRow?.title ? `${currentRow.title} - Event 详情` : 'Event 详情'
+          currentRow?.title ? `${currentRow.title} - 活动详情` : '活动详情'
         }
       >
         {currentRow && (
