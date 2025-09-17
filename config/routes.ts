@@ -160,19 +160,19 @@ export default [
     ],
   },
   {
-    path: '/activity',
+    path: '/events',
     icon: 'calendar',
-    name: 'activity',
+    name: 'events',
     routes: [
       {
-        path: '/activity',
-        redirect: '/activity/list',
+        path: '/events',
+        redirect: '/events/list',
       },
       {
         name: 'list',
         icon: 'smile',
-        path: '/activity/list',
-        component: './activity/list',
+        path: '/events/list',
+        component: './event/list',
       },
     ],
   },
