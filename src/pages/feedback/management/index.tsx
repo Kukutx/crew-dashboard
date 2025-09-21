@@ -283,6 +283,9 @@ const FeedbackManagementPage: React.FC = () => {
         }}
         columns={columns}
         dataSource={feedbackData}
+        scroll={{
+          x: 1200,
+        }}
         pagination={{
           pageSize: 5,
           showSizeChanger: false,
