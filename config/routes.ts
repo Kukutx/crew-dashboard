@@ -177,6 +177,23 @@ export default [
     ],
   },
   {
+    path: '/feedback',
+    icon: 'message',
+    name: 'feedback',
+    routes: [
+      {
+        path: '/feedback',
+        redirect: '/feedback/management',
+      },
+      {
+        name: 'management',
+        icon: 'smile',
+        path: '/feedback/management',
+        component: './feedback/management',
+      },
+    ],
+  },
+  {
     path: '/users',
     icon: 'team',
     name: 'users',
@@ -192,6 +209,12 @@ export default [
         component: './users/management',
       },
     ],
+  },
+  {
+    path: '/policy',
+    icon: 'book',
+    name: 'policy',
+    component: './policy',
   },
   {
     path: '/profile',
