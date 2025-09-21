@@ -31,7 +31,7 @@ export default {
   'menu.list.search-list.applications': '搜索列表（应用）',
   'menu.events': '活动页',
   'menu.events.list': '活动列表',
-  'menu.feedback': '反馈',
+  'menu.feedback': '反馈页',
   'menu.feedback.management': '反馈管理',
   'menu.policy': '政策与条款',
   'menu.users': '用户页',

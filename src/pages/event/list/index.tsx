@@ -690,7 +690,7 @@ const EventList: React.FC = () => {
             icon={<PlusOutlined />}
             onClick={() => setCreateModalOpen(true)}
           >
-            新建 Event
+            新建活动
           </Button>,
         ]}
         request={async (params, sorter) => {
