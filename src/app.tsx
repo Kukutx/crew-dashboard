@@ -12,12 +12,15 @@ import {
   SelectLang,
 } from '@/components';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import {
+  mapFirebaseUserToCurrentUser,
+  waitForFirebaseUser,
+} from '@/services/firebase/auth';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import '@ant-design/v5-patch-for-react-19';
 
-const isDev =
-  process.env.NODE_ENV === 'development' || process.env.CI;
+const isDev = process.env.NODE_ENV === 'development' || process.env.CI;
 const loginPath = '/user/login';
 
 /**
@@ -31,13 +34,23 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
+      const firebaseUser = await waitForFirebaseUser();
+      if (firebaseUser) {
+        return mapFirebaseUserToCurrentUser(firebaseUser);
+      }
+    } catch (error) {
+      console.warn('Failed to resolve Firebase authentication state.', error);
+    }
+
+    try {
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
       return msg.data;
-    } catch (_error) {
-      history.push(loginPath);
+    } catch (error) {
+      console.warn('Unable to fetch current user from API.', error);
     }
+
     return undefined;
   };
   // 如果不是登录页面，执行
@@ -48,6 +61,9 @@ export async function getInitialState(): Promise<{
     )
   ) {
     const currentUser = await fetchUserInfo();
+    if (!currentUser) {
+      history.push(loginPath);
+    }
     return {
       fetchUserInfo,
       currentUser,

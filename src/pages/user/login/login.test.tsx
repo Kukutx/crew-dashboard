@@ -2,7 +2,31 @@
 import { startMock } from '@@/requestRecordMock';
 import { TestBrowser } from '@@/testBrowser';
 import { fireEvent, render } from '@testing-library/react';
-import React, { act } from 'react';
+import * as React from 'react';
+import { act } from 'react';
+import { signInWithEmail } from '@/services/firebase/auth';
+
+const mockFirebaseUser = {
+  uid: 'test-user',
+  displayName: 'Test User',
+  email: 'test-user@example.com',
+  photoURL: 'https://example.com/avatar.png',
+};
+
+jest.mock('@/services/firebase/auth', () => {
+  return {
+    signInWithEmail: jest.fn(async () => ({ user: mockFirebaseUser })),
+    signInWithGoogle: jest.fn(async () => ({ user: mockFirebaseUser })),
+    waitForFirebaseUser: jest.fn(async () => null),
+    hasValidFirebaseConfig: jest.fn(() => true),
+    mapFirebaseUserToCurrentUser: jest.fn((user: any) => ({
+      name: user?.displayName ?? 'Test User',
+      email: user?.email ?? '',
+      avatar: user?.photoURL ?? '',
+      userid: user?.uid ?? 'test-user',
+    })),
+  };
+});
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -70,20 +94,21 @@ describe('Login Page', () => {
 
     await rootContainer.findAllByText('Ant Design');
 
-    const userNameInput = await rootContainer.findByPlaceholderText(
-      'Username: admin or user',
+    const emailInput = await rootContainer.findByPlaceholderText(
+      'Email: user@example.com',
     );
 
     act(() => {
-      fireEvent.change(userNameInput, { target: { value: 'admin' } });
+      fireEvent.change(emailInput, {
+        target: { value: 'test-user@example.com' },
+      });
     });
 
-    const passwordInput = await rootContainer.findByPlaceholderText(
-      'Password: ant.design',
-    );
+    const passwordInput =
+      await rootContainer.findByPlaceholderText('Password: ******');
 
     act(() => {
-      fireEvent.change(passwordInput, { target: { value: 'ant.design' } });
+      fireEvent.change(passwordInput, { target: { value: 'secret' } });
     });
 
     await (await rootContainer.findByText('Login')).click();
@@ -92,6 +117,11 @@ describe('Login Page', () => {
     await waitTime(5000);
 
     await rootContainer.findAllByText('Crew Dashboard');
+
+    expect(signInWithEmail).toHaveBeenCalledWith(
+      'test-user@example.com',
+      'secret',
+    );
 
     expect(rootContainer.asFragment()).toMatchSnapshot();
 

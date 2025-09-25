@@ -1,14 +1,15 @@
 export default {
   'pages.layouts.userLayout.title':
     'Ant Design is the most influential web design specification in Xihu district',
-  'pages.login.accountLogin.tab': 'Account Login',
+  'pages.login.accountLogin.tab': 'Email Login',
   'pages.login.accountLogin.errorMessage':
-    'Incorrect username/password(admin/ant.design)',
+    'Incorrect email/password combination',
   'pages.login.failure': 'Login failed, please try again!',
   'pages.login.success': 'Login successful!',
-  'pages.login.username.placeholder': 'Username: admin or user',
-  'pages.login.username.required': 'Please input your username!',
-  'pages.login.password.placeholder': 'Password: ant.design',
+  'pages.login.email.placeholder': 'Email: user@example.com',
+  'pages.login.email.required': 'Please input your email address!',
+  'pages.login.email.invalid': 'Please enter a valid email address!',
+  'pages.login.password.placeholder': 'Password: ******',
   'pages.login.password.required': 'Please input your password!',
   'pages.login.phoneLogin.tab': 'Phone Login',
   'pages.login.phoneLogin.errorMessage': 'Verification Code Error',
@@ -23,6 +24,19 @@ export default {
   'pages.login.forgotPassword': 'Forgot Password ?',
   'pages.login.submit': 'Login',
   'pages.login.loginWith': 'Login with :',
+  'pages.login.googleLogin': 'Sign in with Google',
+  'pages.login.google.success': 'Google sign-in successful!',
+  'pages.login.firebase.configMissing':
+    'Firebase configuration is missing. Please contact the administrator.',
+  'pages.login.firebase.invalidCredential':
+    'Invalid credentials. Please verify your email and password.',
+  'pages.login.firebase.invalidEmail': 'The email address format is invalid.',
+  'pages.login.firebase.userDisabled':
+    'This account has been disabled. Please contact support.',
+  'pages.login.firebase.userNotFound': 'No account matches the provided email.',
+  'pages.login.firebase.popupClosed': 'The sign-in flow was cancelled.',
+  'pages.login.firebase.popupCancelled':
+    'Another sign-in request is already in progress. Please retry.',
   'pages.login.registerAccount': 'Register Account',
   'pages.welcome.link': 'Welcome',
   'pages.welcome.alertMessage':

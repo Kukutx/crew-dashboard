@@ -1,14 +1,14 @@
 export default {
   'pages.layouts.userLayout.title':
     'পিঁপড়া ডিজাইন হচ্ছে সিহু জেলার সবচেয়ে প্রভাবশালী ওয়েব ডিজাইনের স্পেসিফিকেশন',
-  'pages.login.accountLogin.tab': 'অ্যাকাউন্টে লগইন',
-  'pages.login.accountLogin.errorMessage':
-    'ভুল ব্যবহারকারীর নাম/পাসওয়ার্ড(admin/ant.design)',
+  'pages.login.accountLogin.tab': 'ইমেইল লগইন',
+  'pages.login.accountLogin.errorMessage': 'ইমেইল বা পাসওয়ার্ড সঠিক নয়',
   'pages.login.failure': 'লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন!',
   'pages.login.success': 'সফল লগইন!',
-  'pages.login.username.placeholder': 'ব্যবহারকারীর নাম: admin or user',
-  'pages.login.username.required': 'আপনার ব্যবহারকারীর নাম ইনপুট করুন!',
-  'pages.login.password.placeholder': 'পাসওয়ার্ড: ant.design',
+  'pages.login.email.placeholder': 'ইমেইল: user@example.com',
+  'pages.login.email.required': 'দয়া করে আপনার ইমেইল লিখুন!',
+  'pages.login.email.invalid': 'দয়া করে একটি বৈধ ইমেইল লিখুন!',
+  'pages.login.password.placeholder': 'পাসওয়ার্ড: ******',
   'pages.login.password.required': 'আপনার পাসওয়ার্ড ইনপুট করুন!',
   'pages.login.phoneLogin.tab': 'ফোন লগইন',
   'pages.login.phoneLogin.errorMessage': 'যাচাইকরণ কোড ত্রুটি',
@@ -23,6 +23,19 @@ export default {
   'pages.login.forgotPassword': 'পাসওয়ার্ড ভুলে গেছেন?',
   'pages.login.submit': 'প্রবেশ করুন',
   'pages.login.loginWith': 'লগইন করতে পারেন:',
+  'pages.login.googleLogin': 'Google দিয়ে লগইন করুন',
+  'pages.login.google.success': 'Google দিয়ে সফলভাবে লগইন হয়েছে!',
+  'pages.login.firebase.configMissing':
+    'Firebase কনফিগারেশন পাওয়া যায়নি। অনুগ্রহ করে প্রশাসকের সঙ্গে যোগাযোগ করুন।',
+  'pages.login.firebase.invalidCredential':
+    'অকার্যকর তথ্য। ইমেইল ও পাসওয়ার্ড যাচাই করুন।',
+  'pages.login.firebase.invalidEmail': 'ইমেইলের বিন্যাস সঠিক নয়।',
+  'pages.login.firebase.userDisabled':
+    'এই অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে। প্রশাসকের সঙ্গে যোগাযোগ করুন।',
+  'pages.login.firebase.userNotFound': 'এই ইমেইলের সাথে কোনো অ্যাকাউন্ট পাওয়া যায়নি।',
+  'pages.login.firebase.popupClosed': 'লগইন প্রক্রিয়া বাতিল করা হয়েছে।',
+  'pages.login.firebase.popupCancelled':
+    'আরও একটি লগইন অনুরোধ চলছে। পরে আবার চেষ্টা করুন।',
   'pages.login.registerAccount': 'অ্যাকাউন্ট নিবন্ধন করুন',
   'pages.welcome.link': 'স্বাগতম',
   'pages.welcome.alertMessage': 'দ্রুত এবং শক্তিশালী ভারী শুল্ক উপাদান প্রকাশ করা হয়েছে।',

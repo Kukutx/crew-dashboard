@@ -1,14 +1,14 @@
 export default {
   'pages.layouts.userLayout.title':
     'Ant Design adalah spesifikasi desain Web yang paling berpengaruh di Kabupaten Xihu',
-  'pages.login.accountLogin.tab': 'Login dengan akun',
-  'pages.login.accountLogin.errorMessage':
-    'Nama pengguna dan kata sandi salah(admin/ant.design)',
+  'pages.login.accountLogin.tab': 'Login dengan email',
+  'pages.login.accountLogin.errorMessage': 'Email atau kata sandi salah',
   'pages.login.failure': 'Log masuk gagal, silakan coba lagi!',
   'pages.login.success': 'Login berhasil!',
-  'pages.login.username.placeholder': 'nama pengguna: admin atau user',
-  'pages.login.username.required': 'Nama pengguna harus diisi!',
-  'pages.login.password.placeholder': 'kata sandi: ant.design',
+  'pages.login.email.placeholder': 'Email: user@example.com',
+  'pages.login.email.required': 'Harap masukkan alamat email!',
+  'pages.login.email.invalid': 'Harap masukkan alamat email yang valid!',
+  'pages.login.password.placeholder': 'Kata sandi: ******',
   'pages.login.password.required': 'Kata sandi harus diisi!',
   'pages.login.phoneLogin.tab': 'Login dengan ponsel',
   'pages.login.phoneLogin.errorMessage': 'Kesalahan kode verifikasi',
@@ -23,6 +23,20 @@ export default {
   'pages.login.forgotPassword': 'Lupa Kata Sandi?',
   'pages.login.submit': 'Masuk',
   'pages.login.loginWith': 'Masuk dengan :',
+  'pages.login.googleLogin': 'Masuk dengan Google',
+  'pages.login.google.success': 'Berhasil masuk dengan Google!',
+  'pages.login.firebase.configMissing':
+    'Konfigurasi Firebase belum tersedia. Hubungi administrator.',
+  'pages.login.firebase.invalidCredential':
+    'Kredensial tidak valid. Periksa email dan kata sandi Anda.',
+  'pages.login.firebase.invalidEmail': 'Format email tidak valid.',
+  'pages.login.firebase.userDisabled':
+    'Akun ini dinonaktifkan. Hubungi administrator.',
+  'pages.login.firebase.userNotFound':
+    'Tidak ada akun yang cocok dengan email tersebut.',
+  'pages.login.firebase.popupClosed': 'Proses login dibatalkan.',
+  'pages.login.firebase.popupCancelled':
+    'Permintaan login lain sedang berlangsung. Coba lagi nanti.',
   'pages.login.registerAccount': 'Daftar Akun',
   'pages.welcome.link': 'Selamat datang',
   'pages.welcome.alertMessage':

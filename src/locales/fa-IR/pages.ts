@@ -1,15 +1,15 @@
 export default {
   'pages.layouts.userLayout.title':
     'طراحی مورچه تأثیرگذارترین مشخصات طراحی وب در منطقه Xihu است',
-  'pages.login.accountLogin.tab': 'ورود به حساب کاربری',
-  'pages.login.accountLogin.errorMessage':
-    'نام کاربری / رمزعبور نادرست (مدیر / ant.design)',
+  'pages.login.accountLogin.tab': 'ورود با ایمیل',
+  'pages.login.accountLogin.errorMessage': 'ایمیل یا رمز عبور نادرست است',
   'pages.login.failure':
     'ورود به سیستم با شکست مواجه شد، لطفا دوباره سعی کنید!',
   'pages.login.success': 'ورود موفق!',
-  'pages.login.username.placeholder': 'نام کاربری: مدیر یا کاربر',
-  'pages.login.username.required': 'لطفا نام کاربری خود را وارد کنید!',
-  'pages.login.password.placeholder': 'رمز عبور: ant.design',
+  'pages.login.email.placeholder': 'ایمیل: user@example.com',
+  'pages.login.email.required': 'لطفاً ایمیل خود را وارد کنید!',
+  'pages.login.email.invalid': 'لطفاً یک ایمیل معتبر وارد کنید!',
+  'pages.login.password.placeholder': 'رمز عبور: ******',
   'pages.login.password.required': 'لطفاً رمز ورود خود را وارد کنید!',
   'pages.login.phoneLogin.tab': 'ورود به سیستم تلفن',
   'pages.login.phoneLogin.errorMessage': 'خطای کد تأیید',
@@ -24,6 +24,19 @@ export default {
   'pages.login.forgotPassword': 'رمز عبور را فراموش کرده اید ?',
   'pages.login.submit': 'ارسال',
   'pages.login.loginWith': 'وارد شوید با :',
+  'pages.login.googleLogin': 'ورود با Google',
+  'pages.login.google.success': 'ورود با Google با موفقیت انجام شد!',
+  'pages.login.firebase.configMissing':
+    'پیکربندی Firebase موجود نیست. لطفاً با مدیر تماس بگیرید.',
+  'pages.login.firebase.invalidCredential':
+    'اطلاعات ورود نامعتبر است. ایمیل و رمز عبور را بررسی کنید.',
+  'pages.login.firebase.invalidEmail': 'فرمت ایمیل صحیح نیست.',
+  'pages.login.firebase.userDisabled':
+    'این حساب غیرفعال شده است. لطفاً با مدیر تماس بگیرید.',
+  'pages.login.firebase.userNotFound': 'هیچ حسابی با این ایمیل یافت نشد.',
+  'pages.login.firebase.popupClosed': 'فرآیند ورود لغو شد.',
+  'pages.login.firebase.popupCancelled':
+    'درخواست ورود دیگری در حال انجام است. لطفاً بعداً دوباره تلاش کنید.',
   'pages.login.registerAccount': 'ثبت نام',
   'pages.welcome.link': 'خوش آمدید',
   'pages.welcome.alertMessage': 'اجزای سنگین تر سریعتر و قوی تر آزاد شده اند.',

@@ -1,14 +1,6 @@
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import {
   LoginForm,
-  ProFormCaptcha,
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -19,27 +11,25 @@ import {
   useIntl,
   useModel,
 } from '@umijs/max';
-import { Alert, App, Tabs } from 'antd';
+import { Alert, App, Button } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import {
+  hasValidFirebaseConfig,
+  mapFirebaseUserToCurrentUser,
+  signInWithEmail,
+  signInWithGoogle,
+} from '@/services/firebase/auth';
 import Settings from '../../../../config/defaultSettings';
 
 const useStyles = createStyles(({ token }) => {
   return {
     action: {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
-      '&:hover': {
-        color: token.colorPrimaryActive,
-      },
+      display: 'flex',
+      gap: token.marginXS,
+      alignItems: 'center',
     },
     lang: {
       width: 42,
@@ -63,27 +53,6 @@ const useStyles = createStyles(({ token }) => {
     },
   };
 });
-
-const ActionIcons = () => {
-  const { styles } = useStyles();
-
-  return (
-    <>
-      <AlipayCircleOutlined
-        key="AlipayCircleOutlined"
-        className={styles.action}
-      />
-      <TaobaoCircleOutlined
-        key="TaobaoCircleOutlined"
-        className={styles.action}
-      />
-      <WeiboCircleOutlined
-        key="WeiboCircleOutlined"
-        className={styles.action}
-      />
-    </>
-  );
-};
 
 const Lang = () => {
   const { styles } = useStyles();
@@ -111,53 +80,183 @@ const LoginMessage: React.FC<{
 };
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-  const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const { setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const intl = useIntl();
+  const firebaseConfigReady = hasValidFirebaseConfig();
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      flushSync(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
+  const syncUserState = (user: any) => {
+    if (!user) {
+      return;
     }
+
+    const currentUser = mapFirebaseUserToCurrentUser(user);
+    flushSync(() => {
+      setInitialState((s) => ({
+        ...s,
+        currentUser,
+      }));
+    });
   };
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const redirectToApp = () => {
+    const urlParams = new URL(window.location.href).searchParams;
+    const redirect = urlParams.get('redirect');
+    window.location.href = redirect || '/';
+  };
+
+  const getConfigMissingMessage = () =>
+    intl.formatMessage({
+      id: 'pages.login.firebase.configMissing',
+      defaultMessage: 'Firebase 配置缺失，请联系管理员。',
+    });
+
+  const getErrorMessage = (error: unknown) => {
+    const defaultMessage = intl.formatMessage({
+      id: 'pages.login.failure',
+      defaultMessage: '登录失败，请重试！',
+    });
+
+    if (!error) {
+      return defaultMessage;
+    }
+
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    const errorWithCode = error as {
+      code?: string;
+      message?: string;
+    };
+
+    if (errorWithCode.code) {
+      switch (errorWithCode.code) {
+        case 'auth/invalid-credential':
+        case 'auth/wrong-password':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.invalidCredential',
+            defaultMessage: '凭证无效，请检查邮箱和密码。',
+          });
+        case 'auth/invalid-email':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.invalidEmail',
+            defaultMessage: '邮箱格式不正确。',
+          });
+        case 'auth/user-disabled':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.userDisabled',
+            defaultMessage: '该账户已被禁用，请联系管理员。',
+          });
+        case 'auth/user-not-found':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.userNotFound',
+            defaultMessage: '未找到匹配的账户。',
+          });
+        case 'auth/popup-closed-by-user':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.popupClosed',
+            defaultMessage: '登录流程已取消。',
+          });
+        case 'auth/cancelled-popup-request':
+          return intl.formatMessage({
+            id: 'pages.login.firebase.popupCancelled',
+            defaultMessage: '已有登录请求正在进行，请稍后重试。',
+          });
+        default:
+          break;
+      }
+    }
+
+    if (errorWithCode.message?.includes('Firebase configuration is missing')) {
+      return getConfigMissingMessage();
+    }
+
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    if (errorWithCode.message) {
+      return errorWithCode.message;
+    }
+
+    return defaultMessage;
+  };
+
+  const handleEmailLogin = async (values: {
+    email: string;
+    password: string;
+  }) => {
+    if (!firebaseConfigReady) {
+      const configMessage = getConfigMissingMessage();
+      setAuthError(configMessage);
+      message.error(configMessage);
+      return false;
+    }
+
+    setSubmitting(true);
+    setAuthError(null);
+
     try {
-      // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
-        const defaultLoginSuccessMessage = intl.formatMessage({
+      const credential = await signInWithEmail(values.email, values.password);
+      syncUserState(credential?.user);
+      message.success(
+        intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
-        });
-        message.success(defaultLoginSuccessMessage);
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        window.location.href = urlParams.get('redirect') || '/';
-        return;
-      }
-      console.log(msg);
-      // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
+        }),
+      );
+      redirectToApp();
+      return true;
     } catch (error) {
-      const defaultLoginFailureMessage = intl.formatMessage({
-        id: 'pages.login.failure',
-        defaultMessage: '登录失败，请重试！',
-      });
-      console.log(error);
-      message.error(defaultLoginFailureMessage);
+      const errorMessage = getErrorMessage(error);
+      setAuthError(errorMessage);
+      message.error(errorMessage);
+      return false;
+    } finally {
+      setSubmitting(false);
     }
   };
-  const { status, type: loginType } = userLoginState;
+
+  const handleGoogleLogin = async () => {
+    if (!firebaseConfigReady) {
+      const configMessage = getConfigMissingMessage();
+      setAuthError(configMessage);
+      message.error(configMessage);
+      return;
+    }
+
+    setSubmitting(true);
+    setAuthError(null);
+
+    try {
+      const credential = await signInWithGoogle();
+      syncUserState(credential?.user);
+      message.success(
+        intl.formatMessage({
+          id: 'pages.login.google.success',
+          defaultMessage: 'Google 登录成功！',
+        }),
+      );
+      redirectToApp();
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      setAuthError(errorMessage);
+      message.error(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!firebaseConfigReady) {
+      const configMessage = getConfigMissingMessage();
+      setAuthError((current) => current ?? configMessage);
+    }
+  }, [firebaseConfigReady, intl]);
 
   return (
     <div className={styles.container}>
@@ -190,181 +289,102 @@ const Login: React.FC = () => {
           initialValues={{
             autoLogin: true,
           }}
+          submitter={{
+            searchConfig: {
+              submitText: intl.formatMessage({
+                id: 'pages.login.submit',
+                defaultMessage: '登录',
+              }),
+            },
+            submitButtonProps: {
+              size: 'large',
+              loading: submitting,
+            },
+          }}
           actions={[
             <FormattedMessage
               key="loginWith"
               id="pages.login.loginWith"
               defaultMessage="其他登录方式"
             />,
-            <ActionIcons key="icons" />,
+            <div className={styles.action} key="google">
+              <Button
+                block
+                icon={<GoogleOutlined />}
+                loading={submitting}
+                onClick={handleGoogleLogin}
+                size="large"
+                type="default"
+                disabled={!firebaseConfigReady}
+              >
+                {intl.formatMessage({
+                  id: 'pages.login.googleLogin',
+                  defaultMessage: '使用 Google 登录',
+                })}
+              </Button>
+            </div>,
           ]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            return handleEmailLogin(
+              values as { email: string; password: string },
+            );
           }}
         >
-          <Tabs
-            activeKey={type}
-            onChange={setType}
-            centered
-            items={[
+          {authError ? <LoginMessage content={authError} /> : null}
+          <ProFormText
+            name="email"
+            fieldProps={{
+              size: 'large',
+              prefix: <MailOutlined />,
+              type: 'email',
+            }}
+            placeholder={intl.formatMessage({
+              id: 'pages.login.email.placeholder',
+              defaultMessage: '邮箱: user@example.com',
+            })}
+            rules={[
               {
-                key: 'account',
-                label: intl.formatMessage({
-                  id: 'pages.login.accountLogin.tab',
-                  defaultMessage: '账户密码登录',
-                }),
+                required: true,
+                message: (
+                  <FormattedMessage
+                    id="pages.login.email.required"
+                    defaultMessage="请输入邮箱！"
+                  />
+                ),
               },
               {
-                key: 'mobile',
-                label: intl.formatMessage({
-                  id: 'pages.login.phoneLogin.tab',
-                  defaultMessage: '手机号登录',
-                }),
+                type: 'email',
+                message: (
+                  <FormattedMessage
+                    id="pages.login.email.invalid"
+                    defaultMessage="邮箱格式不正确！"
+                  />
+                ),
               },
             ]}
           />
-
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage
-              content={intl.formatMessage({
-                id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误(admin/ant.design)',
-              })}
-            />
-          )}
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="username"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '用户名: admin or user',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.username.required"
-                        defaultMessage="请输入用户名!"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '密码: ant.design',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
-          )}
-
-          {status === 'error' && loginType === 'mobile' && (
-            <LoginMessage content="验证码错误" />
-          )}
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined />,
-                }}
-                name="mobile"
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.phoneNumber.placeholder',
-                  defaultMessage: '手机号',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.required"
-                        defaultMessage="请输入手机号！"
-                      />
-                    ),
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.invalid"
-                        defaultMessage="手机号格式错误！"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.captcha.placeholder',
-                  defaultMessage: '请输入验证码',
-                })}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${intl.formatMessage({
-                      id: 'pages.getCaptchaSecondText',
-                      defaultMessage: '获取验证码',
-                    })}`;
-                  }
-                  return intl.formatMessage({
-                    id: 'pages.login.phoneLogin.getVerificationCode',
-                    defaultMessage: '获取验证码',
-                  });
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.captcha.required"
-                        defaultMessage="请输入验证码！"
-                      />
-                    ),
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (!result) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
-              />
-            </>
-          )}
+          <ProFormText.Password
+            name="password"
+            fieldProps={{
+              size: 'large',
+              prefix: <LockOutlined />,
+            }}
+            placeholder={intl.formatMessage({
+              id: 'pages.login.password.placeholder',
+              defaultMessage: '密码: ******',
+            })}
+            rules={[
+              {
+                required: true,
+                message: (
+                  <FormattedMessage
+                    id="pages.login.password.required"
+                    defaultMessage="请输入密码！"
+                  />
+                ),
+              },
+            ]}
+          />
           <div
             style={{
               marginBottom: 24,

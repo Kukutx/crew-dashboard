@@ -1,14 +1,15 @@
 export default {
   'pages.layouts.userLayout.title':
     'Ant Designは、西湖区で最も影響力のあるWebデザイン仕様です。',
-  'pages.login.accountLogin.tab': 'アカウントログイン',
+  'pages.login.accountLogin.tab': 'メールログイン',
   'pages.login.accountLogin.errorMessage':
-    'ユーザー名/パスワードが正しくありません(admin/ant.design)',
+    'メールアドレスまたはパスワードが正しくありません',
   'pages.login.failure': 'ログインに失敗したら、もう一度試してください!',
   'pages.login.success': 'ログイン成功!',
-  'pages.login.username.placeholder': 'ユーザー名：adminまたはuser',
-  'pages.login.username.required': 'ユーザー名を入力してください！',
-  'pages.login.password.placeholder': 'パスワード：ant.design',
+  'pages.login.email.placeholder': 'メールアドレス: user@example.com',
+  'pages.login.email.required': 'メールアドレスを入力してください！',
+  'pages.login.email.invalid': '正しいメールアドレスを入力してください！',
+  'pages.login.password.placeholder': 'パスワード: ******',
   'pages.login.password.required': 'パスワードを入力してください！',
   'pages.login.phoneLogin.tab': '電話ログイン',
   'pages.login.phoneLogin.errorMessage': '検証コードエラー',
@@ -23,6 +24,20 @@ export default {
   'pages.login.forgotPassword': 'パスワードをお忘れですか？',
   'pages.login.submit': 'ログイン',
   'pages.login.loginWith': 'その他のログイン方法：',
+  'pages.login.googleLogin': 'Googleでログイン',
+  'pages.login.google.success': 'Google ログインに成功しました！',
+  'pages.login.firebase.configMissing':
+    'Firebase の設定が不足しています。管理者にお問い合わせください。',
+  'pages.login.firebase.invalidCredential':
+    '認証情報が無効です。メールアドレスとパスワードを確認してください。',
+  'pages.login.firebase.invalidEmail':
+    'メールアドレスの形式が正しくありません。',
+  'pages.login.firebase.userDisabled':
+    'このアカウントは無効化されています。管理者にお問い合わせください。',
+  'pages.login.firebase.userNotFound': '該当するアカウントが見つかりません。',
+  'pages.login.firebase.popupClosed': 'ログイン処理がキャンセルされました。',
+  'pages.login.firebase.popupCancelled':
+    'すでにログイン処理が進行中です。しばらくしてから再試行してください。',
   'pages.login.registerAccount': 'アカウント登録',
   'pages.welcome.link': 'ようこそ',
   'pages.welcome.alertMessage':

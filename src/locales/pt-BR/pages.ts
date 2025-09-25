@@ -1,14 +1,14 @@
 export default {
   'pages.layouts.userLayout.title':
     'Ant Design é a especificação de web design mais influente no distrito de Xihu',
-  'pages.login.accountLogin.tab': 'Login da conta',
-  'pages.login.accountLogin.errorMessage':
-    'usuário/senha incorreto(admin/ant.design)',
+  'pages.login.accountLogin.tab': 'Login com e-mail',
+  'pages.login.accountLogin.errorMessage': 'E-mail ou senha incorretos',
   'pages.login.failure': 'Login falhou, por favor tente novamente!',
   'pages.login.success': 'Login efetuado com sucesso!',
-  'pages.login.username.placeholder': 'Usuário: admin or user',
-  'pages.login.username.required': 'Por favor insira seu usuário!',
-  'pages.login.password.placeholder': 'Senha: ant.design',
+  'pages.login.email.placeholder': 'E-mail: user@example.com',
+  'pages.login.email.required': 'Informe seu endereço de e-mail!',
+  'pages.login.email.invalid': 'Informe um endereço de e-mail válido!',
+  'pages.login.password.placeholder': 'Senha: ******',
   'pages.login.password.required': 'Por favor insira sua senha!',
   'pages.login.phoneLogin.tab': 'Login com Telefone',
   'pages.login.phoneLogin.errorMessage': 'Erro de Código de Verificação',
@@ -24,6 +24,20 @@ export default {
   'pages.login.forgotPassword': 'Perdeu a Senha ?',
   'pages.login.submit': 'Enviar',
   'pages.login.loginWith': 'Login com :',
+  'pages.login.googleLogin': 'Entrar com Google',
+  'pages.login.google.success': 'Login com Google realizado com sucesso!',
+  'pages.login.firebase.configMissing':
+    'Configuração do Firebase ausente. Contate o administrador.',
+  'pages.login.firebase.invalidCredential':
+    'Credenciais inválidas. Verifique seu e-mail e senha.',
+  'pages.login.firebase.invalidEmail': 'O formato do e-mail é inválido.',
+  'pages.login.firebase.userDisabled':
+    'Esta conta foi desativada. Contate o suporte.',
+  'pages.login.firebase.userNotFound':
+    'Nenhuma conta corresponde ao e-mail informado.',
+  'pages.login.firebase.popupClosed': 'O processo de login foi cancelado.',
+  'pages.login.firebase.popupCancelled':
+    'Já existe uma solicitação de login em andamento. Tente novamente.',
   'pages.login.registerAccount': 'Registra Conta',
   'pages.welcome.link': 'Bem-vindo',
   'pages.welcome.alertMessage':
