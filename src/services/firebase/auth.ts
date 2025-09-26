@@ -7,6 +7,9 @@ const FIREBASE_SCRIPTS = [
 const isBrowser = typeof window !== 'undefined';
 const hasDocument = typeof document !== 'undefined';
 
+export const DEFAULT_AVATAR_URL =
+  'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
+
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY ?? 'AIzaSyC1Hl5KexRX8ov7ZlDMEqE85grmdGr8zDM',
   authDomain: process.env.FIREBASE_AUTH_DOMAIN ?? 'crew-test-2db02.firebaseapp.com',
@@ -221,7 +224,7 @@ export const mapFirebaseUserToCurrentUser = (user: any): API.CurrentUser => {
   return {
     name: user?.displayName ?? user?.email ?? 'Crew member',
     email: user?.email ?? undefined,
-    avatar: selectGoogleAvatar(user),
+    avatar: selectGoogleAvatar(user) ?? DEFAULT_AVATAR_URL,
     userid: user?.uid ?? undefined,
   };
 };

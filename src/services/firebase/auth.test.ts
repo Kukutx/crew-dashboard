@@ -38,7 +38,7 @@ describe('mapFirebaseUserToCurrentUser', () => {
     expect(mapFirebaseUserToCurrentUser(user)).toEqual({
       name: 'password-user@example.com',
       email: 'password-user@example.com',
-      avatar: undefined,
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
       userid: 'password-user',
     });
   });

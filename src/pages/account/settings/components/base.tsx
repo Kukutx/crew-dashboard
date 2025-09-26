@@ -7,9 +7,10 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useModel, useRequest } from '@umijs/max';
 import { Button, Input, message, Upload } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { DEFAULT_AVATAR_URL } from '@/services/firebase/auth';
 import { queryCity, queryCurrent, queryProvince } from '../service';
 import useStyles from './index.style';
 
@@ -29,6 +30,8 @@ const validatorPhone = (
 
 const BaseView: React.FC = () => {
   const { styles } = useStyles();
+  const { initialState } = useModel('@@initialState');
+  const resolvedCurrentUser = initialState?.currentUser;
   // 头像组件 方便以后独立，增加裁剪之类的功能
   const AvatarView = ({ avatar }: { avatar: string }) => (
     <>
@@ -46,20 +49,38 @@ const BaseView: React.FC = () => {
       </Upload>
     </>
   );
-  const { data: currentUser, loading } = useRequest(() => {
-    return queryCurrent();
-  });
-  const getAvatarURL = () => {
-    if (currentUser) {
-      if (currentUser.avatar) {
-        return currentUser.avatar;
-      }
-      const url =
-        'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
-      return url;
+  const { data: fallbackUser, loading: loadingFallbackUser } = useRequest(
+    queryCurrent,
+    {
+      ready: !resolvedCurrentUser,
+    },
+  );
+
+  const currentUser = resolvedCurrentUser ?? fallbackUser;
+
+  const initialValues = useMemo(() => {
+    if (!currentUser) {
+      return {
+        email: '',
+      };
     }
-    return '';
+
+    return {
+      ...currentUser,
+      email: currentUser.email ?? '',
+      phone: currentUser.phone ? currentUser.phone.split('-') : undefined,
+    };
+  }, [currentUser]);
+
+  const getAvatarURL = () => {
+    const avatar = currentUser?.avatar;
+    if (avatar && avatar.trim().length > 0) {
+      return avatar;
+    }
+    return DEFAULT_AVATAR_URL;
   };
+
+  const loading = !currentUser && loadingFallbackUser;
   const handleFinish = async () => {
     message.success('更新基本信息成功');
   };
@@ -69,6 +90,9 @@ const BaseView: React.FC = () => {
         <>
           <div className={styles.left}>
             <ProForm
+              key={
+                currentUser?.userid ?? currentUser?.email ?? 'anonymous-user'
+              }
               layout="vertical"
               onFinish={handleFinish}
               submitter={{
@@ -77,16 +101,14 @@ const BaseView: React.FC = () => {
                 },
                 render: (_, dom) => dom[1],
               }}
-              initialValues={{
-                ...currentUser,
-                phone: currentUser?.phone.split('-'),
-              }}
+              initialValues={initialValues}
               hideRequiredMark
             >
               <ProFormText
                 width="md"
                 name="email"
                 label="邮箱"
+                disabled
                 rules={[
                   {
                     required: true,
