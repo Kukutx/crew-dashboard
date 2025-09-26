@@ -1,4 +1,4 @@
-import { LinkOutlined } from '@ant-design/icons';
+import { LinkOutlined, UserOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RequestConfig, RunTimeLayoutConfig } from '@umijs/max';
@@ -88,6 +88,7 @@ export const layout: RunTimeLayoutConfig = ({
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
+      icon: <UserOutlined />,
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;

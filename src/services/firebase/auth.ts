@@ -191,11 +191,37 @@ export const signInWithGoogle = async () => {
   return auth.signInWithPopup(provider);
 };
 
+const GOOGLE_PROVIDER_ID = 'google.com';
+
+const selectGoogleAvatar = (user: any): string | undefined => {
+  const providerData = Array.isArray(user?.providerData)
+    ? user.providerData
+    : [];
+
+  const googleProvider = providerData.find(
+    (provider: any) => provider?.providerId === GOOGLE_PROVIDER_ID,
+  );
+
+  if (!googleProvider) {
+    return undefined;
+  }
+
+  const avatarCandidate =
+    typeof googleProvider?.photoURL === 'string' &&
+    googleProvider.photoURL.trim().length > 0
+      ? googleProvider.photoURL
+      : typeof user?.photoURL === 'string' && user.photoURL.trim().length > 0
+        ? user.photoURL
+        : undefined;
+
+  return avatarCandidate;
+};
+
 export const mapFirebaseUserToCurrentUser = (user: any): API.CurrentUser => {
   return {
     name: user?.displayName ?? user?.email ?? 'Crew member',
     email: user?.email ?? undefined,
-    avatar: user?.photoURL ?? undefined,
+    avatar: selectGoogleAvatar(user),
     userid: user?.uid ?? undefined,
   };
 };
