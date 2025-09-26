@@ -4,14 +4,14 @@ import {
   EllipsisOutlined,
   ShareAltOutlined,
 } from '@ant-design/icons';
-import { useRequest } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { Avatar, Card, Dropdown, List, Tooltip } from 'antd';
 import numeral from 'numeral';
 import React from 'react';
 import type { ListItemDataType } from '../../data.d';
 import { queryFakeList } from '../../service';
 import useStyles from './index.style';
-export function formatWan(val: number) {
+export function formatWan(val: number, wanLabel: string = '万') {
   const v = val * 1;
   if (!v || Number.isNaN(v)) return '';
   let result: React.ReactNode = val;
@@ -28,7 +28,7 @@ export function formatWan(val: number) {
             marginLeft: 2,
           }}
         >
-          万
+          {wanLabel}
         </span>
       </span>
     );
@@ -36,6 +36,7 @@ export function formatWan(val: number) {
   return result;
 }
 const Applications: React.FC = () => {
+  const intl = useIntl();
   const { styles: stylesApplications } = useStyles();
   // 获取tab列表数据
   const { data: listData } = useRequest(() => {
@@ -50,11 +51,19 @@ const Applications: React.FC = () => {
   }> = ({ activeUser, newUser }) => (
     <div className={stylesApplications.cardInfo}>
       <div>
-        <p>活跃用户</p>
+        <p>
+          {intl.formatMessage({
+            id: 'pages.account.center.applications.active-user',
+          })}
+        </p>
         <p>{activeUser}</p>
       </div>
       <div>
-        <p>新增用户</p>
+        <p>
+          {intl.formatMessage({
+            id: 'pages.account.center.applications.new-user',
+          })}
+        </p>
         <p>{newUser}</p>
       </div>
     </div>
@@ -83,13 +92,28 @@ const Applications: React.FC = () => {
               },
             }}
             actions={[
-              <Tooltip key="download" title="下载">
+              <Tooltip
+                key="download"
+                title={intl.formatMessage({
+                  id: 'pages.account.center.applications.download',
+                })}
+              >
                 <DownloadOutlined />
               </Tooltip>,
-              <Tooltip title="编辑" key="edit">
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'pages.account.center.applications.edit',
+                })}
+                key="edit"
+              >
                 <EditOutlined />
               </Tooltip>,
-              <Tooltip title="分享" key="share">
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'pages.account.center.applications.share',
+                })}
+                key="share"
+              >
                 <ShareAltOutlined />
               </Tooltip>,
               <Dropdown
@@ -97,11 +121,15 @@ const Applications: React.FC = () => {
                   items: [
                     {
                       key: '1',
-                      title: '1st menu item',
+                      label: intl.formatMessage({
+                        id: 'pages.account.center.applications.more-1',
+                      }),
                     },
                     {
                       key: '2',
-                      title: '2nd menu item',
+                      label: intl.formatMessage({
+                        id: 'pages.account.center.applications.more-2',
+                      }),
                     },
                   ],
                 }}
@@ -117,7 +145,12 @@ const Applications: React.FC = () => {
             />
             <div>
               <CardInfo
-                activeUser={formatWan(item.activeUser)}
+                activeUser={formatWan(
+                  item.activeUser,
+                  intl.formatMessage({
+                    id: 'pages.account.center.applications.wan',
+                  }),
+                )}
                 newUser={numeral(item.newUser).format('0,0')}
               />
             </div>

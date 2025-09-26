@@ -7,35 +7,47 @@ import {
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { useModel, useRequest } from '@umijs/max';
+import { useIntl, useModel, useRequest } from '@umijs/max';
 import { Button, Input, message, Upload } from 'antd';
 import React, { useMemo } from 'react';
 import { DEFAULT_AVATAR_URL } from '@/services/firebase/auth';
 import { queryCity, queryCurrent, queryProvince } from '../service';
 import useStyles from './index.style';
 
-const validatorPhone = (
-  _rule: any,
-  value: string[],
-  callback: (message?: string) => void,
-) => {
-  if (!value[0]) {
-    callback('Please input your area code!');
-  }
-  if (!value[1]) {
-    callback('Please input your phone number!');
-  }
-  callback();
-};
-
 const BaseView: React.FC = () => {
   const { styles } = useStyles();
+  const intl = useIntl();
+  const validatorPhone = (
+    _rule: any,
+    value: string[],
+    callback: (message?: string) => void,
+  ) => {
+    if (!value[0]) {
+      callback(
+        intl.formatMessage({
+          id: 'pages.account.settings.phone.area-code',
+        }),
+      );
+      return;
+    }
+    if (!value[1]) {
+      callback(
+        intl.formatMessage({
+          id: 'pages.account.settings.phone.number',
+        }),
+      );
+      return;
+    }
+    callback();
+  };
   const { initialState } = useModel('@@initialState');
   const resolvedCurrentUser = initialState?.currentUser;
   // 头像组件 方便以后独立，增加裁剪之类的功能
   const AvatarView = ({ avatar }: { avatar: string }) => (
     <>
-      <div className={styles.avatar_title}>头像</div>
+      <div className={styles.avatar_title}>
+        {intl.formatMessage({ id: 'pages.account.settings.avatar.title' })}
+      </div>
       <div className={styles.avatar}>
         <img src={avatar} alt="avatar" />
       </div>
@@ -43,7 +55,7 @@ const BaseView: React.FC = () => {
         <div className={styles.button_view}>
           <Button>
             <UploadOutlined />
-            更换头像
+            {intl.formatMessage({ id: 'pages.account.settings.avatar.button' })}
           </Button>
         </div>
       </Upload>
@@ -82,7 +94,9 @@ const BaseView: React.FC = () => {
 
   const loading = !currentUser && loadingFallbackUser;
   const handleFinish = async () => {
-    message.success('更新基本信息成功');
+    message.success(
+      intl.formatMessage({ id: 'pages.account.settings.success' }),
+    );
   };
   return (
     <div className={styles.baseView}>
@@ -97,7 +111,9 @@ const BaseView: React.FC = () => {
               onFinish={handleFinish}
               submitter={{
                 searchConfig: {
-                  submitText: '更新基本信息',
+                  submitText: intl.formatMessage({
+                    id: 'pages.account.settings.update',
+                  }),
                 },
                 render: (_, dom) => dom[1],
               }}
@@ -107,61 +123,88 @@ const BaseView: React.FC = () => {
               <ProFormText
                 width="md"
                 name="email"
-                label="邮箱"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.email',
+                })}
                 disabled
                 rules={[
                   {
                     required: true,
-                    message: '请输入您的邮箱!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.email-message',
+                    }),
                   },
                 ]}
               />
               <ProFormText
                 width="md"
                 name="name"
-                label="昵称"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.nickname',
+                })}
                 rules={[
                   {
                     required: true,
-                    message: '请输入您的昵称!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.nickname-message',
+                    }),
                   },
                 ]}
               />
               <ProFormTextArea
                 name="profile"
-                label="个人简介"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.profile',
+                })}
                 rules={[
                   {
                     required: true,
-                    message: '请输入个人简介!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.profile-message',
+                    }),
                   },
                 ]}
-                placeholder="个人简介"
+                placeholder={intl.formatMessage({
+                  id: 'pages.account.settings.profile-placeholder',
+                })}
               />
               <ProFormSelect
                 width="sm"
                 name="country"
-                label="国家/地区"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.country',
+                })}
                 rules={[
                   {
                     required: true,
-                    message: '请输入您的国家或地区!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.country-message',
+                    }),
                   },
                 ]}
                 options={[
                   {
-                    label: '中国',
+                    label: intl.formatMessage({
+                      id: 'pages.account.settings.country.china',
+                    }),
                     value: 'China',
                   },
                 ]}
               />
 
-              <ProForm.Group title="所在省市" size={8}>
+              <ProForm.Group
+                title={intl.formatMessage({
+                  id: 'pages.account.settings.geographic',
+                })}
+                size={8}
+              >
                 <ProFormSelect
                   rules={[
                     {
                       required: true,
-                      message: '请输入您的所在省!',
+                      message: intl.formatMessage({
+                        id: 'pages.account.settings.province-message',
+                      }),
                     },
                   ]}
                   width="sm"
@@ -192,7 +235,9 @@ const BaseView: React.FC = () => {
                         rules={[
                           {
                             required: true,
-                            message: '请输入您的所在城市!',
+                            message: intl.formatMessage({
+                              id: 'pages.account.settings.city-message',
+                            }),
                           },
                         ]}
                         disabled={!province}
@@ -219,21 +264,29 @@ const BaseView: React.FC = () => {
               <ProFormText
                 width="md"
                 name="address"
-                label="街道地址"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.address',
+                })}
                 rules={[
                   {
                     required: true,
-                    message: '请输入您的街道地址!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.address-message',
+                    }),
                   },
                 ]}
               />
               <ProFormFieldSet
                 name="phone"
-                label="联系电话"
+                label={intl.formatMessage({
+                  id: 'pages.account.settings.phone',
+                })}
                 rules={[
                   {
                     required: true,
-                    message: '请输入您的联系电话!',
+                    message: intl.formatMessage({
+                      id: 'pages.account.settings.phone-message',
+                    }),
                   },
                   {
                     validator: validatorPhone,

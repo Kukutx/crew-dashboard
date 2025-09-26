@@ -1,6 +1,7 @@
 import { GridContent } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
 import { Menu } from 'antd';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import BaseView from './components/base';
 import BindingView from './components/binding';
 import NotificationView from './components/notification';
@@ -14,12 +15,22 @@ type SettingsState = {
 };
 const Settings: React.FC = () => {
   const { styles } = useStyles();
-  const menuMap: Record<string, React.ReactNode> = {
-    base: '基本设置',
-    security: '安全设置',
-    binding: '账号绑定',
-    notification: '新消息通知',
-  };
+  const intl = useIntl();
+  const menuMap: Record<string, React.ReactNode> = useMemo(
+    () => ({
+      base: intl.formatMessage({ id: 'pages.account.settings.menuMap.base' }),
+      security: intl.formatMessage({
+        id: 'pages.account.settings.menuMap.security',
+      }),
+      binding: intl.formatMessage({
+        id: 'pages.account.settings.menuMap.binding',
+      }),
+      notification: intl.formatMessage({
+        id: 'pages.account.settings.menuMap.notification',
+      }),
+    }),
+    [intl],
+  );
   const [initConfig, setInitConfig] = useState<SettingsState>({
     mode: 'inline',
     selectKey: 'base',

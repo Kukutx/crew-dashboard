@@ -1,33 +1,57 @@
+import { useIntl } from '@umijs/max';
 import { List, Switch } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
 const NotificationView: React.FC = () => {
-  const getData = () => {
-    const Action = (
-      <Switch checkedChildren="开" unCheckedChildren="关" defaultChecked />
-    );
-    return [
+  const intl = useIntl();
+  const switchAction = useMemo(
+    () => (
+      <Switch
+        checkedChildren={intl.formatMessage({
+          id: 'pages.account.settings.notification.switch.open',
+        })}
+        unCheckedChildren={intl.formatMessage({
+          id: 'pages.account.settings.notification.switch.close',
+        })}
+        defaultChecked
+      />
+    ),
+    [intl],
+  );
+  const data = useMemo(
+    () => [
       {
-        title: '用户消息',
-        description: '其他用户的消息将以站内信的形式通知',
-        actions: [Action],
+        title: intl.formatMessage({
+          id: 'pages.account.settings.notification.user',
+        }),
+        description: intl.formatMessage({
+          id: 'pages.account.settings.notification.user-description',
+        }),
+        actions: [switchAction],
       },
       {
-        title: '系统消息',
-        description: '系统消息将以站内信的形式通知',
-        actions: [Action],
+        title: intl.formatMessage({
+          id: 'pages.account.settings.notification.system',
+        }),
+        description: intl.formatMessage({
+          id: 'pages.account.settings.notification.system-description',
+        }),
+        actions: [switchAction],
       },
       {
-        title: '待办任务',
-        description: '待办任务将以站内信的形式通知',
-        actions: [Action],
+        title: intl.formatMessage({
+          id: 'pages.account.settings.notification.todo',
+        }),
+        description: intl.formatMessage({
+          id: 'pages.account.settings.notification.todo-description',
+        }),
+        actions: [switchAction],
       },
-    ];
-  };
-
-  const data = getData();
+    ],
+    [intl, switchAction],
+  );
   return (
     <List<Unpacked<typeof data>>
       itemLayout="horizontal"

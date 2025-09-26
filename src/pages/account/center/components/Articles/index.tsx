@@ -1,5 +1,5 @@
 import { LikeOutlined, MessageFilled, StarTwoTone } from '@ant-design/icons';
-import { useRequest } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { List, Tag } from 'antd';
 import React from 'react';
 import type { ListItemDataType } from '../../data.d';
@@ -8,6 +8,7 @@ import ArticleListContent from '../ArticleListContent';
 import useStyles from './index.style';
 
 const Articles: React.FC = () => {
+  const intl = useIntl();
   const { styles } = useStyles();
   const IconText: React.FC<{
     icon: React.ReactNode;
@@ -55,9 +56,21 @@ const Articles: React.FC = () => {
             }
             description={
               <span>
-                <Tag>Ant Design</Tag>
-                <Tag>设计语言</Tag>
-                <Tag>蚂蚁金服</Tag>
+                <Tag>
+                  {intl.formatMessage({
+                    id: 'pages.account.center.articles.tag.ant-design',
+                  })}
+                </Tag>
+                <Tag>
+                  {intl.formatMessage({
+                    id: 'pages.account.center.articles.tag.design-language',
+                  })}
+                </Tag>
+                <Tag>
+                  {intl.formatMessage({
+                    id: 'pages.account.center.articles.tag.ant-financial',
+                  })}
+                </Tag>
               </span>
             }
           />

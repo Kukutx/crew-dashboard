@@ -5,7 +5,7 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import { GridContent } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import {
   Avatar,
   Card,
@@ -16,7 +16,7 @@ import {
   Row,
   Tag,
 } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import useStyles from './Center.style';
 import Applications from './components/Applications';
 import Articles from './components/Articles';
@@ -24,56 +24,10 @@ import Projects from './components/Projects';
 import type { CurrentUser, TagType, tabKeyType } from './data.d';
 import { queryCurrent } from './service';
 
-const operationTabList = [
-  {
-    key: 'articles',
-    tab: (
-      <span>
-        文章{' '}
-        <span
-          style={{
-            fontSize: 14,
-          }}
-        >
-          (8)
-        </span>
-      </span>
-    ),
-  },
-  {
-    key: 'applications',
-    tab: (
-      <span>
-        应用{' '}
-        <span
-          style={{
-            fontSize: 14,
-          }}
-        >
-          (8)
-        </span>
-      </span>
-    ),
-  },
-  {
-    key: 'projects',
-    tab: (
-      <span>
-        项目{' '}
-        <span
-          style={{
-            fontSize: 14,
-          }}
-        >
-          (8)
-        </span>
-      </span>
-    ),
-  },
-];
 const TagList: React.FC<{
   tags: CurrentUser['tags'];
-}> = ({ tags }) => {
+  title: string;
+}> = ({ tags, title }) => {
   const { styles } = useStyles();
   const ref = useRef<InputRef | null>(null);
   const [newTags, setNewTags] = useState<TagType[]>([]);
@@ -109,7 +63,7 @@ const TagList: React.FC<{
   };
   return (
     <div className={styles.tags}>
-      <div className={styles.tagsTitle}>标签</div>
+      <div className={styles.tagsTitle}>{title}</div>
       {(tags || []).concat(newTags).map((item) => (
         <Tag key={item.key}>{item.label}</Tag>
       ))}
@@ -141,7 +95,65 @@ const TagList: React.FC<{
 };
 const Center: React.FC = () => {
   const { styles } = useStyles();
+  const intl = useIntl();
   const [tabKey, setTabKey] = useState<tabKeyType>('articles');
+
+  const operationTabList = useMemo(
+    () => [
+      {
+        key: 'articles',
+        tab: (
+          <span>
+            {intl.formatMessage({
+              id: 'pages.account.center.tab.articles',
+            })}{' '}
+            <span
+              style={{
+                fontSize: 14,
+              }}
+            >
+              (8)
+            </span>
+          </span>
+        ),
+      },
+      {
+        key: 'applications',
+        tab: (
+          <span>
+            {intl.formatMessage({
+              id: 'pages.account.center.tab.applications',
+            })}{' '}
+            <span
+              style={{
+                fontSize: 14,
+              }}
+            >
+              (8)
+            </span>
+          </span>
+        ),
+      },
+      {
+        key: 'projects',
+        tab: (
+          <span>
+            {intl.formatMessage({
+              id: 'pages.account.center.tab.projects',
+            })}{' '}
+            <span
+              style={{
+                fontSize: 14,
+              }}
+            >
+              (8)
+            </span>
+          </span>
+        ),
+      },
+    ],
+    [intl],
+  );
 
   //  获取用户信息
   const { data: currentUser, loading } = useRequest(() => {
@@ -234,7 +246,12 @@ const Center: React.FC = () => {
                 </div>
                 {renderUserInfo(currentUser)}
                 <Divider dashed />
-                <TagList tags={currentUser.tags || []} />
+                <TagList
+                  title={intl.formatMessage({
+                    id: 'pages.account.center.tags',
+                  })}
+                  tags={currentUser.tags || []}
+                />
                 <Divider
                   style={{
                     marginTop: 16,
@@ -242,7 +259,9 @@ const Center: React.FC = () => {
                   dashed
                 />
                 <div className={styles.team}>
-                  <div className={styles.teamTitle}>团队</div>
+                  <div className={styles.teamTitle}>
+                    {intl.formatMessage({ id: 'pages.account.center.team' })}
+                  </div>
                   <Row gutter={36}>
                     {currentUser.notice?.map((item) => (
                       <Col key={item.id} lg={24} xl={12}>

@@ -1,49 +1,115 @@
+import { useIntl } from '@umijs/max';
 import { List } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 type Unpacked<T> = T extends (infer U)[] ? U : T;
 
-const passwordStrength = {
-  strong: <span className="strong">强</span>,
-  medium: <span className="medium">中</span>,
-  weak: <span className="weak">弱 Weak</span>,
-};
-
 const SecurityView: React.FC = () => {
-  const getData = () => [
-    {
-      title: '账户密码',
-      description: (
-        <>
-          当前密码强度：
-          {passwordStrength.strong}
-        </>
+  const intl = useIntl();
+  const passwordStrength = useMemo(
+    () => ({
+      strong: (
+        <span className="strong">
+          {intl.formatMessage({ id: 'pages.account.settings.security.strong' })}
+        </span>
       ),
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: '密保手机',
-      description: `已绑定手机：138****8293`,
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: '密保问题',
-      description: '未设置密保问题，密保问题可有效保护账户安全',
-      actions: [<a key="Set">设置</a>],
-    },
-    {
-      title: '备用邮箱',
-      description: `已绑定邮箱：ant***sign.com`,
-      actions: [<a key="Modify">修改</a>],
-    },
-    {
-      title: 'MFA 设备',
-      description: '未绑定 MFA 设备，绑定后，可以进行二次确认',
-      actions: [<a key="bind">绑定</a>],
-    },
-  ];
+      medium: (
+        <span className="medium">
+          {intl.formatMessage({ id: 'pages.account.settings.security.medium' })}
+        </span>
+      ),
+      weak: (
+        <span className="weak">
+          {intl.formatMessage({ id: 'pages.account.settings.security.weak' })}
+        </span>
+      ),
+    }),
+    [intl],
+  );
+  const data = useMemo(
+    () => [
+      {
+        title: intl.formatMessage({
+          id: 'pages.account.settings.security.password',
+        }),
+        description: (
+          <>
+            {intl.formatMessage({
+              id: 'pages.account.settings.security.password-description',
+            })}
+            {passwordStrength.strong}
+          </>
+        ),
+        actions: [
+          <a key="Modify">
+            {intl.formatMessage({
+              id: 'pages.account.settings.security.modify',
+            })}
+          </a>,
+        ],
+      },
+      {
+        title: intl.formatMessage({
+          id: 'pages.account.settings.security.phone',
+        }),
+        description: intl.formatMessage(
+          { id: 'pages.account.settings.security.phone-description' },
+          { phone: '138****8293' },
+        ),
+        actions: [
+          <a key="Modify">
+            {intl.formatMessage({
+              id: 'pages.account.settings.security.modify',
+            })}
+          </a>,
+        ],
+      },
+      {
+        title: intl.formatMessage({
+          id: 'pages.account.settings.security.question',
+        }),
+        description: intl.formatMessage({
+          id: 'pages.account.settings.security.question-description',
+        }),
+        actions: [
+          <a key="Set">
+            {intl.formatMessage({ id: 'pages.account.settings.security.set' })}
+          </a>,
+        ],
+      },
+      {
+        title: intl.formatMessage({
+          id: 'pages.account.settings.security.email',
+        }),
+        description: intl.formatMessage(
+          { id: 'pages.account.settings.security.email-description' },
+          { email: 'ant***sign.com' },
+        ),
+        actions: [
+          <a key="Modify">
+            {intl.formatMessage({
+              id: 'pages.account.settings.security.modify',
+            })}
+          </a>,
+        ],
+      },
+      {
+        title: intl.formatMessage({
+          id: 'pages.account.settings.security.mfa',
+        }),
+        description: intl.formatMessage({
+          id: 'pages.account.settings.security.mfa-description',
+        }),
+        actions: [
+          <a key="bind">
+            {intl.formatMessage({ id: 'pages.account.settings.security.bind' })}
+          </a>,
+        ],
+      },
+    ],
+    [intl, passwordStrength],
+  );
 
-  const data = getData();
   return (
     <List<Unpacked<typeof data>>
       itemLayout="horizontal"
